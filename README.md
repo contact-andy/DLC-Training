@@ -40,17 +40,12 @@ Each day consists of several sessions, practical exercises, and collaborative di
 
 ---
 
-## 📁 Repository Structure
-
-# 📁 dlc-training/
-
-## Root Files
+## 📁 Repository Structure 
+### Root Files
 - `README.md` — Overview of the project and training
 - `.gitignore` — Git ignore list
 
----
-
-## 📁 schedule/
+### 📁 schedule/
 **Daily training outlines and agendas**
 - `Day-I.md`
 - `Day-II.md`
@@ -58,9 +53,7 @@ Each day consists of several sessions, practical exercises, and collaborative di
 - `Day-IV.md`
 - `Day-V.md`
 
----
-
-## 📁 slides/
+### 📁 slides/
 **Session PowerPoint slides and PDFs**
 - `Day-I/`
 - `Day-II/`
@@ -68,9 +61,7 @@ Each day consists of several sessions, practical exercises, and collaborative di
 - `Day-IV/`
 - `Day-V/`
 
----
-
-## 📁 resources/
+### 📁 resources/
 **Supporting training materials**
 - `code-samples/`
   - `laravel/`
