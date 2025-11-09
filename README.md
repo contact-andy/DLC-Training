@@ -41,7 +41,7 @@ Each day consists of several sessions, practical exercises, and collaborative di
 ---
 
 ## 📁 Repository Structure 
-### Root Files
+### 📁 Root Files
 - `README.md` — Overview of the project and training
 - `.gitignore` — Git ignore list
 
