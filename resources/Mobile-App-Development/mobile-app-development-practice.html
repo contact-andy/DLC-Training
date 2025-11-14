@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Native Beginner Practice Guide</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f6f6;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #0b5ba8;
+        }
+        pre {
+            background: #2b2b2b;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        .section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>React Native Beginner Step-by-Step Practice Guide</h1>
+
+    <!-- STEP 1 -->
+    <div class="section">
+        <h2>STEP 1 — Create the Project (Expo)</h2>
+        <pre>
+npm install -g expo-cli
+expo init ProfileApp
+cd ProfileApp
+expo start
+        </pre>
+        <p>Select the <strong>Blank Template</strong>.</p>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="section">
+        <h2>STEP 2 — JSX (HTML-like Structure)</h2>
+        <p>React Native uses components similar to HTML:</p>
+        <ul>
+            <li><strong>&lt;div&gt;</strong> → <strong>&lt;View&gt;</strong></li>
+            <li><strong>&lt;p&gt;</strong> → <strong>&lt;Text&gt;</strong></li>
+            <li><strong>&lt;img&gt;</strong> → <strong>&lt;Image&gt;</strong></li>
+            <li><strong>&lt;button&gt;</strong> → <strong>&lt;Button&gt;</strong></li>
+        </ul>
+
+        <h3>Create components/ProfileCard.js</h3>
+        <pre>
+import React from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
+
+export default function ProfileCard() {
+  return (
+    <View style={styles.card}>
+      <Image 
+        source={{ uri: 'https://placekitten.com/200/200' }} 
+        style={styles.avatar}
+      />
+      <Text style={styles.name}>John Doe</Text>
+      <Text style={styles.bio}>React Native Beginner Developer</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    elevation: 3
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginTop: 10
+  },
+  bio: {
+    fontSize: 16,
+    color: '#555',
+    marginTop: 5
+  }
+});
+        </pre>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="section">
+        <h2>STEP 3 — Use Your Component in App.js</h2>
+        <pre>
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import ProfileCard from './components/ProfileCard';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <ProfileCard />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f1f1f1'
+  }
+});
+        </pre>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="section">
+        <h2>STEP 4 — Add State (Change Bio Button)</h2>
+        <pre>
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, Button } from 'react-native';
+
+export default function ProfileCard() {
+  const [bio, setBio] = useState("React Native Beginner Developer");
+
+  return (
+    <View style={styles.card}>
+      <Image 
+        source={{ uri: 'https://placekitten.com/200/200' }} 
+        style={styles.avatar}
+      />
+      <Text style={styles.name}>John Doe</Text>
+      <Text style={styles.bio}>{bio}</Text>
+
+      <Button 
+        title="Change Bio" 
+        onPress={() => setBio("Learning React Native Step by Step!")}
+      />
+    </View>
+  );
+}
+        </pre>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="section">
+        <h2>STEP 5 — Optional: Add Multiple Screens</h2>
+        <p>Install navigation:</p>
+        <pre>
+npm install @react-navigation/native
+npm install @react-navigation/native-stack
+expo install react-native-screens react-native-safe-area-context
+        </pre>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="section">
+        <h2>STEP 7 — Create an Expo Account</h2>
+        <ol>
+            <li>Go to <strong>expo.dev</strong></li>
+            <li>Create an account (Google/GitHub/Email)</li>
+            <li>Verify email</li>
+        </ol>
+        <pre>expo login</pre>
+    </div>
+
+    <!-- STEP 8 -->
+    <div class="section">
+        <h2>STEP 8 — Connect Project to Expo Account</h2>
+        <pre>expo whoami</pre>
+        <p>If not logged in:</p>
+        <pre>expo login</pre>
+    </div>
+
+    <!-- STEP 9 -->
+    <div class="section">
+        <h2>STEP 9 — Prepare app.json</h2>
+        <pre>
+{
+  "expo": {
+    "name": "ProfileApp",
+    "slug": "profile-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "android": {
+      "package": "com.yourusername.profileapp"
+    }
+  }
+}
+        </pre>
+    </div>
+
+    <!-- STEP 10 -->
+    <div class="section">
+        <h2>STEP 10 — Generate APK</h2>
+        <p>Install EAS CLI:</p>
+        <pre>npm install -g eas-cli</pre>
+
+        <p>Login:</p>
+        <pre>eas login</pre>
+
+        <p>Configure:</p>
+        <pre>eas build:configure</pre>
+
+        <p>Build APK:</p>
+        <pre>eas build -p android --profile preview</pre>
+
+        <p>Production (universal APK):</p>
+        <pre>eas build -p android --profile production</pre>
+    </div>
+
+    <!-- STEP 11 -->
+    <div class="section">
+        <h2>STEP 11 — Install APK on Android</h2>
+        <h3>Method 1 — Direct Download</h3>
+        <ul>
+            <li>Send APK to phone</li>
+            <li>Open and install</li>
+            <li>Allow "Install Unknown Apps"</li>
+        </ul>
+
+        <h3>Method 2 — USB</h3>
+        <p>Copy APK → open on phone</p>
+
+        <h3>Method 3 — ADB</h3>
+        <pre>adb install your-app.apk</pre>
+    </div>
+
+    <!-- STEP 12 -->
+    <div class="section">
+        <h2>STEP 12 — Publish App to Expo</h2>
+        <pre>expo publish</pre>
+        <p>This generates a shareable Expo link.</p>
+    </div>
+
+    <!-- STEP 13 -->
+    <div class="section">
+        <h2>STEP 13 — Best Practice for Beginners</h2>
+        <h3>Use Expo Go App</h3>
+        <pre>expo start</pre>
+        <p>Scan QR code → run app instantly.</p>
+    </div>
+
+    <hr>
+
+    <h2>🎉 Your Full Practice Guide is Ready!</h2>
+    <p>If you want, I can also generate:</p>
+    <ul>
+        <li>iOS build guide</li>
+        <li>Google Play Store publishing guide</li>
+        <li>A ZIP file content structure</li>
+        <li>A styled PDF version of this document</li>
+    </ul>
+
+</body>
+</html>
