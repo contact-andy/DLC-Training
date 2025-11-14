@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Git & GitHub Practice for Freshers — Step‑by‑Step (using HTML files)</title>
+  <style>
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; max-width:900px;margin:28px auto;padding:20px;line-height:1.6;color:#111}
+    pre{background:#f7f7f7;padding:12px;border-radius:6px;overflow:auto}
+    code{font-family:monospace}
+    h1,h2{color:#0b5}
+    .boxed{border-left:4px solid #0b5;padding:10px;background:#f0fff7}
+    .exercise{background:#fff8e6;padding:10px;border-radius:6px;border:1px dashed #e6c47a}
+  </style>
+</head>
+<body>
+  <h1>Git & GitHub Practice for Freshers — Step‑by‑Step (HTML files)</h1>
+  <p>This single page guides you through a gentle, hands‑on practice using <strong>Git</strong> locally and <strong>GitHub</strong> remote, working with small HTML files. Follow each step on your computer and copy commands into your terminal. Answers and full command lists are given in the <em>Solutions</em> section at the end.</p>
+
+  <h2>Prerequisites</h2>
+  <ul>
+    <li>A computer with Git installed. (Check with <code>git --version</code>)</li>
+    <li>A GitHub account (https://github.com) — free accounts are fine.</li>
+    <li>A code editor (VS Code, Sublime, Notepad++) or simple text editor.</li>
+    <li>Basic terminal/command‑line familiarity.</li>
+  </ul>
+
+  <h2>Step 0 — Quick checks</h2>
+  <pre><code>git --version
+whoami  # or check your OS username
+</code></pre>
+
+  <h2>Step 1 — Create a practice folder and initialize Git</h2>
+  <p>Open terminal and run:</p>
+  <pre><code>mkdir git-practice-html
+cd git-practice-html
+git init
+</code></pre>
+  <p>Git created a <code>.git</code> folder. Now configure your identity if not set:</p>
+  <pre><code>git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+</code></pre>
+
+  <h2>Step 2 — Add your first HTML file (index.html)</h2>
+  <p>Create a file named <code>index.html</code> with this content:</p>
+  <pre><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;My Git Practice&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, Git!&lt;/h1&gt;
+  &lt;p&gt;This is my first file in the git-practice repository.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+  <p>Save the file and then add & commit it:</p>
+  <pre><code>git status
+git add index.html
+git commit -m "Add index.html: Hello Git"</code></pre>
+
+  <h2>Step 3 — Create another HTML page and link it</h2>
+  <p>Create <code>about.html</code>:</p>
+  <pre><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;About&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;About This Practice&lt;/h1&gt;
+  &lt;p&gt;A short description about the practice.&lt;/p&gt;
+  &lt;a href="index.html"&gt;Back to Home&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+  <p>Add a link from <code>index.html</code> to <code>about.html</code>, then:</p>
+  <pre><code>git add about.html index.html
+git commit -m "Add about.html and link from index"</code></pre>
+
+  <h2>Step 4 — Branching practice</h2>
+  <p>Create a new branch to add a contact page:</p>
+  <pre><code>git branch add-contact
+git checkout add-contact
+# or shorthand: git checkout -b add-contact
+</code></pre>
+  <p>Create <code>contact.html</code> with a small contact form placeholder, then:</p>
+  <pre><code>git add contact.html
+git commit -m "Add contact.html on add-contact branch"
+</code></pre>
+
+  <h2>Step 5 — Merge branch into main</h2>
+  <pre><code>git checkout main
+git merge add-contact
+</code></pre>
+  <p>If merge is a fast-forward, it will integrate. If there is a conflict, Git will mark files; resolve the conflict in the editor, then:</p>
+  <pre><code>git add &lt;resolved-file&gt;
+git commit -m "Resolve merge conflict"
+</code></pre>
+
+  <h2>Step 6 — Create a remote GitHub repo and push</h2>
+  <ol>
+    <li>On GitHub website, click <strong>New repository</strong>. Name it <code>git-practice-html</code>. Keep it public (or private) and <strong>do NOT</strong> initialize with README (we'll push existing repo).</li>
+    <li>GitHub will show commands to connect your local repo. Use these (example):</li>
+  </ol>
+  <pre><code>git remote add origin https://github.com/your-username/git-practice-html.git
+git branch -M main
+git push -u origin main</code></pre>
+  <p>After this, your HTML files are on GitHub.</p>
+
+  <h2>Step 7 — Collaborating: clone, edit, pull request</h2>
+  <p>To simulate a collaborator, clone your repo into a new folder:</p>
+  <pre><code>cd ..
+git clone https://github.com/your-username/git-practice-html.git git-practice-copy
+cd git-practice-copy
+</code></pre>
+  <p>Make a change in <code>index.html</code> (e.g., add a paragraph), commit and push on a new branch:</p>
+  <pre><code>git checkout -b improve-index
+# edit index.html
+git add index.html
+git commit -m "Improve index content"
+git push -u origin improve-index
+</code></pre>
+  <p>Then on GitHub open a Pull Request from <code>improve-index</code> into <code>main</code>. Accept it to merge.</p>
+
+  <h2>Step 8 — GitHub Pages (host your HTML)</h2>
+  <p>To publish your site from the <code>main</code> branch:</p>
+  <ol>
+    <li>On GitHub repo page, go to <strong>Settings &gt; Pages</strong>.</li>
+    <li>Choose branch: <code>main</code> and folder: <code>/ (root)</code>. Save.</li>
+  </ol>
+  <p>GitHub will provide a URL like <code>https://your-username.github.io/git-practice-html/</code>. Visit it to see your HTML pages live.</p>
+
+  <h2>Common Git Commands — Quick Reference</h2>
+  <pre><code>git status        # see changed files
+git add <file>     # stage changes
+git commit -m "msg"   # record changes
+git log --oneline  # view commits
+git branch         # list branches
+git checkout <b>   # switch branch
+git checkout -b <b># create & switch to branch
+git merge <b>      # merge branch
+git remote -v      # view remotes
+git push           # push changes
+git pull           # fetch & merge remote changes
+</code></pre>
+
+  <h2>Practice Exercises</h2>
+  <ol>
+    <li>Create a new branch called <code>feature-navbar</code> and add a simple navigation bar to <code>index.html</code>, commit and merge it back to <code>main</code>.</li>
+    <li>Simulate a conflict: Two clones edit the same line in <code>about.html</code>. Push both branches and resolve the merge conflict on one of them.</li>
+    <li>Make a small enhancement, open a Pull Request, then merge on GitHub (use GitHub UI).</li>
+    <li>Enable GitHub Pages and share your live URL.</li>
+  </ol>
+
+  <div class="exercise">
+    <strong>Mini assignment:</strong> Build a 3‑page mini site (Home, About, Contact), host with GitHub Pages, and share the repo URL and Pages URL.
+  </div>
+
+  <h2>Solutions & Commands (cheat sheet)</h2>
+  <p>Below are the exact commands you can copy & paste when doing the steps above (replace <code>your-username</code>):</p>
+  <pre><code># create repo locally
+mkdir git-practice-html
+cd git-practice-html
+git init
+# set identity (only once)
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+
+# add files
+# (create index.html, about.html, contact.html with editor)
+
+git add .
+git commit -m "Initial site: index, about, contact"
+
+# create branch and add contact page
+git checkout -b add-contact
+# (create contact.html)
+git add contact.html
+git commit -m "Add contact page"
+
+# merge back
+git checkout main
+git merge add-contact
+
+# connect to GitHub (after creating remote repo on github.com)
+git remote add origin https://github.com/your-username/git-practice-html.git
+git branch -M main
+git push -u origin main
+
+# create a feature branch, push, open PR
+git checkout -b feature-navbar
+# edit files
+git add .
+git commit -m "Add navbar"
+git push -u origin feature-navbar
+</code></pre>
+
+  <h2>Troubleshooting tips</h2>
+  <ul>
+    <li><strong>Permission denied on push:</strong> You may need to set up SSH keys or use a personal access token for HTTPS pushes. GitHub docs explain both options.</li>
+    <li><strong>Merge conflicts:</strong> Open the file, find <<<<<<< HEAD markers, edit to keep desired content, then <code>git add</code> and <code>git commit</code>.</li>
+    <li><strong>Forgot to add a file:</strong> Use <code>git add</code> and <code>git commit --amend</code> to update last commit (careful if already pushed).</li>
+  </ul>
+
+  <h2>Next steps (if you want more)</h2>
+  <ul>
+    <li>Learn <code>.gitignore</code> to ignore files like <code>node_modules/</code>.</li>
+    <li>Try GitHub Actions to auto-deploy or run tests.</li>
+    <li>Explore <code>rebase</code> and force pushes (advanced).</li>
+  </ul>
+
+  <footer>
+    <p style="font-size:0.9em;color:#666">Created as a hands-on practice guide. Feel free to copy this folder and use it in a classroom or workshop.</p>
+  </footer>
+</body>
+</html>
