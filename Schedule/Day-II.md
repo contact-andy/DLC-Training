@@ -49,12 +49,5 @@
 
 ---
 
-## 📎 Resources
-
-- `dlc_admin_guide.pdf` – Admin panel overview  
-- `laravel_editing_guide.pdf` – Laravel MVC structure reference  
-- `sample_videos/` – Example video files for content upload  
-- `exercises/day2_tasks.md` – Hands-on task list  
-
 ---
 
