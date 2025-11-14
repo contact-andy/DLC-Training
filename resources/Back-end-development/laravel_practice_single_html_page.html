@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Laravel Practice — Single Page Tutorial</title>
+  <style>
+    :root{font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;--bg:#f7f8fb;--card:#fff;--accent:#0b63d6}
+    body{margin:0;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#ffffff, #eef4ff);padding:28px 20px;border-bottom:1px solid #e6eef9}
+    .wrap{max-width:980px;margin:20px auto;padding:18px}
+    h1{margin:0 0 6px;font-size:28px}
+    p.lead{margin:4px 0 16px;color:#334}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    nav a{background:#fff;padding:8px 10px;border-radius:8px;text-decoration:none;color:#0b63d6;border:1px solid #dbe9ff}
+    section.card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,30,60,.06);margin:14px 0}
+    pre{background:#0f1724;color:#dbeafe;padding:12px;border-radius:8px;overflow:auto}
+    code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;font-size:13px}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:16px}
+    aside{position:sticky;top:18px;height:max-content}
+    .btn{display:inline-block;padding:8px 10px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none}
+    .muted{color:#556}
+    .small{font-size:13px}
+    .cmd{background:#0b1220;color:#bfe0ff;padding:8px;border-radius:6px;display:block}
+    footer{color:#556;padding:20px;text-align:center}
+    table{width:100%;border-collapse:collapse}
+    table th, table td{border:1px solid #eef4ff;padding:8px;text-align:left}
+    .copy{cursor:pointer;padding:6px 8px;border-radius:6px;border:1px solid #cfe0ff;background:#f8fbff}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Laravel Practice — Single Page Tutorial</h1>
+      <p class="lead">A beginner-friendly, single‑file HTML tutorial that walks freshers through creating a small <strong>Contacts</strong> app in Laravel (routes → controller → Blade views → CRUD). Copy commands and code directly.</p>
+      <nav>
+        <a href="#goal">Goal</a>
+        <a href="#prereqs">Prerequisites</a>
+        <a href="#steps">Step-by-step</a>
+        <a href="#views">Blade (HTML) Views</a>
+        <a href="#auth">Optional Auth</a>
+        <a href="#exercises">Exercises</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap grid">
+    <div>
+      <section id="goal" class="card">
+        <h2>Project Goal</h2>
+        <p>Build a small <strong>Contacts</strong> app that supports:</p>
+        <ul>
+          <li>List contacts</li>
+          <li>Create a contact (form)</li>
+          <li>Edit & Delete contacts</li>
+        </ul>
+        <p class="muted small">Everything will be implemented using simple Blade templates (plain HTML) so freshers can copy & paste.</p>
+      </section>
+
+      <section id="prereqs" class="card">
+        <h2>Prerequisites</h2>
+        <ul>
+          <li>PHP 8.1+ (check with <code>php -v</code>)</li>
+          <li>Composer (check with <code>composer -V</code>)</li>
+          <li>SQLite (optional) or MySQL/Postgres</li>
+          <li>Terminal/CLI basics</li>
+        </ul>
+      </section>
+
+      <section id="steps" class="card">
+        <h2>Step-by-step (commands)</h2>
+        <p class="small muted">Run these commands in your terminal inside the folder where you want the project.</p>
+
+        <h3>1. Create project</h3>
+        <pre><code class="cmd">composer create-project laravel/laravel contacts-app
+cd contacts-app</code></pre>
+
+        <h3>2. Start dev server (quick test)</h3>
+        <pre><code class="cmd">php artisan serve
+# visit http://127.0.0.1:8000</code></pre>
+
+        <h3>3. Configure SQLite (easy for practice)</h3>
+        <p>Edit the <code>.env</code> file and set:</p>
+        <pre><code>DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/contacts-app/database/database.sqlite</code></pre>
+        <p>Then create the file:</p>
+        <pre><code class="cmd">touch database/database.sqlite</code></pre>
+
+        <h3>4. Create model + migration</h3>
+        <pre><code class="cmd">php artisan make:model Contact -m</code></pre>
+        <p>Open the generated migration in <code>database/migrations</code> and replace <code>up()</code> with:</p>
+        <pre><code>public function up()
+{
+    Schema::create('contacts', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->string('phone')->nullable();
+        $table->timestamps();
+    });
+}</code></pre>
+
+        <h3>5. Run migrations</h3>
+        <pre><code class="cmd">php artisan migrate</code></pre>
+
+        <h3>6. Make resource controller & routes</h3>
+        <pre><code class="cmd">php artisan make:controller ContactController --resource --model=Contact</code></pre>
+        <p>Add to <code>routes/web.php</code>:</p>
+        <pre><code>use App\Http\Controllers\ContactController;
+
+Route::get('/', function () {
+    return redirect()->route('contacts.index');
+});
+
+Route::resource('contacts', ContactController::class);</code></pre>
+
+        <h3>7. Controller (copy into <code>app/Http/Controllers/ContactController.php</code>)</h3>
+        <pre><code>namespace App\Http\Controllers;
+
+use App\Models\Contact;
+use Illuminate\Http\Request;
+
+class ContactController extends Controller
+{
+    public function index()
+    {
+        $contacts = Contact::orderBy('name')->get();
+        return view('contacts.index', compact('contacts'));
+    }
+
+    public function create()
+    {
+        return view('contacts.create');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|unique:contacts,email',
+            'phone' => 'nullable|string|max:50',
+        ]);
+
+        Contact::create($data);
+
+        return redirect()->route('contacts.index')->with('success', 'Contact added.');
+    }
+
+    public function edit(Contact $contact)
+    {
+        return view('contacts.edit', compact('contact'));
+    }
+
+    public function update(Request $request, Contact $contact)
+    {
+        $data = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|unique:contacts,email,' . $contact->id,
+            'phone' => 'nullable|string|max:50',
+        ]);
+
+        $contact->update($data);
+
+        return redirect()->route('contacts.index')->with('success', 'Contact updated.');
+    }
+
+    public function destroy(Contact $contact)
+    {
+        $contact->delete();
+        return redirect()->route('contacts.index')->with('success', 'Contact deleted.');
+    }
+}</code></pre>
+
+        <h3>8. Model (allow mass assignment: <code>app/Models/Contact.php</code>)</h3>
+        <pre><code>class Contact extends Model
+{
+    protected $fillable = ['name','email','phone'];
+}
+</code></pre>
+
+      </section>
+
+      <section id="views" class="card">
+        <h2>Blade Views (HTML) — put files in <code>resources/views/contacts/</code></h2>
+
+        <h3>Layout: <code>resources/views/layouts/app.blade.php</code></h3>
+        <pre><code>&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="csrf-token" content="{{ csrf_token() }}"&gt;
+  &lt;title&gt;Contacts App&lt;/title&gt;
+  &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Contacts App&lt;/h1&gt;
+    &lt;nav&gt;&lt;a href="{{ route('contacts.index') }}"&gt;Home&lt;/a&gt; | &lt;a href="{{ route('contacts.create') }}"&gt;Add Contact&lt;/a&gt;&lt;/nav&gt;
+    &lt;hr&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    @if(session('success'))
+      &lt;p style="color:green"&gt;{{ session('success') }}&lt;/p&gt;
+    @endif
+
+    @yield('content')
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3>Index: <code>contacts/index.blade.php</code></h3>
+        <pre><code>@extends('layouts.app')
+
+@section('content')
+  &lt;h2&gt;All Contacts&lt;/h2&gt;
+
+  @if($contacts->isEmpty())
+    &lt;p&gt;No contacts found. &lt;a href="{{ route('contacts.create') }}"&gt;Add one&lt;/a&gt;.&lt;/p&gt;
+  @else
+    &lt;table&gt;
+      &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Email&lt;/th&gt;&lt;th&gt;Phone&lt;/th&gt;&lt;th&gt;Actions&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+      &lt;tbody&gt;
+        @foreach($contacts as $c)
+          &lt;tr&gt;
+            &lt;td&gt;{{ $c->name }}&lt;/td&gt;
+            &lt;td&gt;{{ $c->email }}&lt;/td&gt;
+            &lt;td&gt;{{ $c->phone }}&lt;/td&gt;
+            &lt;td&gt;
+              &lt;a href="{{ route('contacts.edit', $c) }}"&gt;Edit&lt;/a&gt;
+              &lt;form action="{{ route('contacts.destroy', $c) }}" method="POST" style="display:inline"&gt;
+                @csrf
+                @method('DELETE')
+                &lt;button type="submit" onclick="return confirm('Delete this contact?')"&gt;Delete&lt;/button&gt;
+              &lt;/form&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        @endforeach
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  @endif
+@endsection</code></pre>
+
+        <h3>Create: <code>contacts/create.blade.php</code></h3>
+        <pre><code>@extends('layouts.app')
+
+@section('content')
+  &lt;h2&gt;Add Contact&lt;/h2&gt;
+
+  &lt;form action="{{ route('contacts.store') }}" method="POST"&gt;
+    @csrf
+    &lt;label&gt;Name &lt;input type="text" name="name" value="{{ old('name') }}"&gt;&lt;/label&gt;
+    @error('name')&lt;p style="color:red"&gt;{{ $message }}&lt;/p&gt;@enderror
+
+    &lt;label&gt;Email &lt;input type="email" name="email" value="{{ old('email') }}"&gt;&lt;/label&gt;
+    @error('email')&lt;p style="color:red"&gt;{{ $message }}&lt;/p&gt;@enderror
+
+    &lt;label&gt;Phone &lt;input type="text" name="phone" value="{{ old('phone') }}"&gt;&lt;/label&gt;
+    @error('phone')&lt;p style="color:red"&gt;{{ $message }}&lt;/p&gt;@enderror
+
+    &lt;button type="submit"&gt;Save&lt;/button&gt;
+  &lt;/form&gt;
+@endsection</code></pre>
+
+        <h3>Edit: <code>contacts/edit.blade.php</code></h3>
+        <pre><code>@extends('layouts.app')
+
+@section('content')
+  &lt;h2&gt;Edit Contact&lt;/h2&gt;
+
+  &lt;form action="{{ route('contacts.update', $contact) }}" method="POST"&gt;
+    @csrf
+    @method('PUT')
+
+    &lt;label&gt;Name &lt;input type="text" name="name" value="{{ old('name', $contact->name) }}"&gt;&lt;/label&gt;
+    @error('name')&lt;p style="color:red"&gt;{{ $message }}&lt;/p&gt;@enderror
+
+    &lt;label&gt;Email &lt;input type="email" name="email" value="{{ old('email', $contact->email) }}"&gt;&lt;/label&gt;
+    @error('email')&lt;p style="color:red"&gt;{{ $message }}&lt;/p&gt;@enderror
+
+    &lt;label&gt;Phone &lt;input type="text" name="phone" value="{{ old('phone', $contact->phone) }}"&gt;&lt;/label&gt;
+    @error('phone')&lt;p style="color:red"&gt;{{ $message }}&lt;/p&gt;@enderror
+
+    &lt;button type="submit"&gt;Update&lt;/button&gt;
+  &lt;/form&gt;
+@endsection</code></pre>
+
+        <p class="muted small">Note: Blade's <code>{{ }}</code> auto-escapes output (XSS protection). Don't forget <code>@csrf</code> in forms (CSRF protection).</p>
+      </section>
+
+      <section id="auth" class="card">
+        <h2>Optional: Add Basic Auth (Laravel Breeze)</h2>
+        <pre><code class="cmd">composer require laravel/breeze --dev
+php artisan breeze:install blade
+npm install
+npm run dev
+php artisan migrate</code></pre>
+        <p class="small muted">Breeze scaffolds login/register/password reset using Blade views.</p>
+      </section>
+
+      <section id="exercises" class="card">
+        <h2>Next Exercises (for learners)</h2>
+        <ol>
+          <li>Add search/filter to the contacts list.</li>
+          <li>Add pagination (<code>->paginate(10)</code>).</li>
+          <li>Allow contact profile picture upload (validate + store).</li>
+          <li>Associate contacts with users (add <code>user_id</code> to migration) and protect routes.</li>
+          <li>Deploy to a free host (Fly.io, Render) and configure environment variables.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Security & Best Practices (beginner checklist)</h2>
+        <ul>
+          <li>Keep <code>.env</code> out of version control.</li>
+          <li>Always validate inputs server-side using <code>$request->validate()</code>.</li>
+          <li>Use <code>@csrf</code> in forms and <code>{{ }}</code> for escaped output.</li>
+          <li>For APIs / mobile apps, consider Sanctum for token auth.</li>
+          <li>Validate file uploads (MIME, size) and store with the <code>Storage</code> facade.</li>
+        </ul>
+      </section>
+
+    </div>
+
+    <aside>
+      <section class="card">
+        <h3>Quick Commands</h3>
+        <pre><code>composer create-project laravel/laravel contacts-app
+php artisan make:model Contact -m
+php artisan migrate
+php artisan make:controller ContactController --resource --model=Contact
+php artisan serve</code></pre>
+      </section>
+
+      <section class="card">
+        <h3>Files to edit</h3>
+        <table>
+          <tr><th>Path</th><th>Purpose</th></tr>
+          <tr><td>routes/web.php</td><td>Register resource routes</td></tr>
+          <tr><td>app/Models/Contact.php</td><td>Model (fillable)</td></tr>
+          <tr><td>app/Http/Controllers/ContactController.php</td><td>Controller logic</td></tr>
+          <tr><td>resources/views/layouts/app.blade.php</td><td>Layout</td></tr>
+          <tr><td>resources/views/contacts/*.blade.php</td><td>Index/create/edit views</td></tr>
+        </table>
+      </section>
+
+      <section class="card small">
+        <h3>Tips</h3>
+        <ul>
+          <li>Use SQLite for quick practice — no DB server setup required.</li>
+          <li>Use Git: <code>git init</code>, commit often.</li>
+          <li>Read Laravel docs for details on Eloquent, validation, and Blade.</li>
+        </ul>
+      </section>
+
+    </aside>
+  </main>
+
+  <footer>
+    <p class="small muted">Made for freshers — copy the code blocks directly into your Laravel project. If you want this as a downloadable HTML file or a printable checklist, tell me and I will prepare it.</p>
+  </footer>
+
+  <script>
+    // copy-on-click for code blocks (lightweight)
+    document.querySelectorAll('pre').forEach(p=>{
+      const btn=document.createElement('button');
+      btn.textContent='Copy';btn.className='copy';
+      btn.onclick=()=>{navigator.clipboard.writeText(p.innerText).then(()=>{btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1200)})}
+      p.style.position='relative';p.prepend(btn);
+    });
+  </script>
+</body>
+</html>
