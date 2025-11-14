@@ -49,11 +49,5 @@
 
 ---
 
-## 📎 Resources
-
-- `setup_guide.pdf` – Step-by-step environment setup manual  
-- `dlc_source_code.zip` – Source code package  
-- `sample_database.sql` – Example database file  
-
 ---
 
